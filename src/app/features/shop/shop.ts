@@ -17,9 +17,15 @@ protected readonly title = 'E-Commerce';
   products = signal<Product[]>([]);
 
   ngOnInit(): void {
-    this.shopService.getProducts().subscribe({
+    this.initializeShop();
+  }
+
+    initializeShop(){
+      this.shopService.getBrands();
+      this.shopService.getTypes();
+
+      this.shopService.getProducts().subscribe({
       next: (response) => this.products.set(response.data),
       error: (error) => console.log(error)
-    });
-  }
+    });};
 }
