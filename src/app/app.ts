@@ -1,7 +1,9 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { Header } from "./layout/header/header";
 import { HttpClient } from '@angular/common/http';
+import { Product } from './shared/models/product';
+import { Pagination } from './shared/models/pagination';
 
 @Component({
   selector: 'app-root',
@@ -14,11 +16,11 @@ export class App implements OnInit {
 
   private baseUrl = "https://localhost:5001/api/";
   private http = inject(HttpClient);
-  products:any[] = []
+  products = signal<Product[]>([]);
 
   ngOnInit(): void {
-    this.http.get<any>(this.baseUrl + "products").subscribe({
-      next: responce => this.products = responce.value.data,
+    this.http.get<Pagination<Product>>(this.baseUrl + "products").subscribe({
+      next: responce => this.products.set(responce.data),
       error: error => console.log(error),
       complete: () => console.log("Complete") 
     });
