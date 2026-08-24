@@ -12,7 +12,7 @@ export class ShopService {
   private http = inject(HttpClient);
 
   getProducts() {
-      return this.http.get<Pagination<Product>>(this.baseUrl + "products");
+      return this.http.get<Pagination<Product>>(this.baseUrl + "products?pageSize=18");
     };
 }
 
