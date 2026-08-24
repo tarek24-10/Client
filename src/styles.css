@@ -3,5 +3,5 @@
 @import "tailwindcss";
 
 .container{
-    @apply mx-auto
+    @apply mx-auto;
 }

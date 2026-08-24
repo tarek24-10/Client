@@ -2,10 +2,11 @@ import { Component, inject, signal } from '@angular/core';
 import { Product } from '../../shared/models/product';
 import { ShopService } from '../../core/services/shop.service';
 import { MatCardModule } from '@angular/material/card';
+import { ProductItem } from "./product-item/product-item";
 
 @Component({
   selector: 'app-shop',
-  imports: [MatCardModule],
+  imports: [MatCardModule, ProductItem],
   templateUrl: './shop.html',
   styleUrl: './shop.css',
 })
