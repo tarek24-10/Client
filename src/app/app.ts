@@ -4,6 +4,7 @@ import { Header } from "./layout/header/header";
 import { HttpClient } from '@angular/common/http';
 import { Product } from './shared/models/product';
 import { Pagination } from './shared/models/pagination';
+import { ShopService } from './core/services/shop.service';
 
 @Component({
   selector: 'app-root',
@@ -13,16 +14,14 @@ import { Pagination } from './shared/models/pagination';
 })
 export class App implements OnInit {
   protected readonly title = 'E-Commerce';
+  private shopService = inject(ShopService);
 
-  private baseUrl = "https://localhost:5001/api/";
-  private http = inject(HttpClient);
   products = signal<Product[]>([]);
 
   ngOnInit(): void {
-    this.http.get<Pagination<Product>>(this.baseUrl + "products").subscribe({
-      next: responce => this.products.set(responce.data),
-      error: error => console.log(error),
-      complete: () => console.log("Complete") 
+    this.shopService.getProducts().subscribe({
+      next: (response) => this.products.set(response.data),
+      error: (error) => console.log(error)
     });
   }
 }
