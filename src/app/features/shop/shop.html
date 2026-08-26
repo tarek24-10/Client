@@ -1,5 +1,18 @@
-<div class="flex flex-column gap-3 justify-end mb-3">
+<div class="flex justify-between items-center mb-3">
 
+    <mat-paginator
+    (page)="handlePageEvent($event)"
+    [length]="products()?.count"
+    [pageSize]="products()?.pageSize"
+    [showFirstLastButtons]="true"
+    [pageSizeOptions]="pageSizeOptions"
+    [pageIndex]="shopParams.pageNumber - 1"
+    aria-label="Select page"
+    >
+
+    </mat-paginator>
+
+    <div class="flex gap-3">
     <button mat-stroked-button (click)="openFilterDialog()">
         <mat-icon>filter_list</mat-icon>
         Filters
@@ -8,12 +21,13 @@
         <mat-icon>swap_vert</mat-icon>
         sort
     </button>
+    </div>
 
 </div>
 
 
 <div class="grid grid-cols-5 gap-4">
-     @for (product of products(); track product.id) {
+     @for (product of products()?.data; track product.id) {
         <app-product-item [product]="product"></app-product-item>
     }
 </div>

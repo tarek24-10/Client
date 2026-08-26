@@ -21,8 +21,8 @@ export class FilterDialog {
   private dialogRef = inject(MatDialogRef<FilterDialog>);
   data = inject(MAT_DIALOG_DATA);
 
-  selectedBrands:string[] = [];
-  selectedTypes:string[] = [];
+  selectedBrands:string[] = this.data.selectedBrands;
+  selectedTypes:string[] = this.data.selectedTypes;
 
   applyFilters(){
     this.dialogRef.close({

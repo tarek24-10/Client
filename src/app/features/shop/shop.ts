@@ -10,10 +10,12 @@ import { FilterDialog } from './filter-dialog/filter-dialog';
 import { MatMenu, MatMenuTrigger } from '@angular/material/menu';
 import { MatListOption, MatSelectionList, MatSelectionListChange } from '@angular/material/list';
 import { ShopParams } from '../../shared/models/shopParams';
+import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { Pagination } from '../../shared/models/pagination';
 
 @Component({
   selector: 'app-shop',
-  imports: [MatCardModule, ProductItem, MatAnchor, MatIconModule, MatMenu, MatSelectionList, MatListOption, MatMenuTrigger],
+  imports: [MatCardModule, ProductItem, MatAnchor, MatIconModule, MatMenu, MatSelectionList, MatListOption, MatMenuTrigger, MatPaginatorModule],
   templateUrl: './shop.html',
   styleUrl: './shop.css',
 })
@@ -30,7 +32,9 @@ protected readonly title = 'E-Commerce';
 
   shopParams = new ShopParams();
 
-  products = signal<Product[]>([]);
+  pageSizeOptions = [5,10,15,20];
+
+  products = signal<Pagination<Product> | null>(null);
 
   ngOnInit(): void {
     this.initializeShop();
@@ -45,7 +49,7 @@ protected readonly title = 'E-Commerce';
 
     getProducts(){
       this.shopService.getProducts(this.shopParams).subscribe({
-      next: (response) => this.products.set(response.data),
+      next: (response) => this.products.set(response),
       error: (error) => console.log(error)
     });
     };
@@ -64,6 +68,7 @@ protected readonly title = 'E-Commerce';
         if (result) {
           this.shopParams.brands = result.selectedBrands;
           this.shopParams.types = result.selectedTypes;
+          this.shopParams.pageNumber = 1;
           this.getProducts();
         }},
       });
@@ -74,6 +79,15 @@ protected readonly title = 'E-Commerce';
       if(selectedOption){
         this.shopParams.sort = selectedOption.value;
       }
+      this.shopParams.pageNumber = 1;
+      this.getProducts();
+    }
+
+    handlePageEvent(event:PageEvent){
+      this.shopParams.pageNumber = event.pageIndex + 1;
+      this.shopParams.pageSize = event.pageSize;
+      console.log(this.shopParams.pageNumber);
+      console.log(this.shopParams.pageSize);
       this.getProducts();
     }
 }
