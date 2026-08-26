@@ -9,6 +9,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { FilterDialog } from './filter-dialog/filter-dialog';
 import { MatMenu, MatMenuTrigger } from '@angular/material/menu';
 import { MatListOption, MatSelectionList, MatSelectionListChange } from '@angular/material/list';
+import { ShopParams } from '../../shared/models/shopParams';
 
 @Component({
   selector: 'app-shop',
@@ -20,14 +21,14 @@ export class Shop {
 protected readonly title = 'E-Commerce';
   private shopService = inject(ShopService);
   private dialogService = inject(MatDialog);
-  selectedBrands:string[] = [];
-  selectedTypes:string[] = [];
-  selectedsort:string = "name";
+
   sortOptions = [
     {name:"Alphabetical", value:"name"},
     {name:"Price: Low-High", value:"priceAsc"},
     {name:"price: High-Low", value:"priceDesc"}
   ];
+
+  shopParams = new ShopParams();
 
   products = signal<Product[]>([]);
 
@@ -43,7 +44,7 @@ protected readonly title = 'E-Commerce';
       };
 
     getProducts(){
-      this.shopService.getProducts(this.selectedBrands, this.selectedTypes, this.selectedsort).subscribe({
+      this.shopService.getProducts(this.shopParams).subscribe({
       next: (response) => this.products.set(response.data),
       error: (error) => console.log(error)
     });
@@ -53,16 +54,16 @@ protected readonly title = 'E-Commerce';
       const dialogRef = this.dialogService.open(FilterDialog, {
         minWidth: "500px",
         data:{
-                selectedBrands: this.selectedBrands,
-                selectedTypes: this.selectedTypes
+                selectedBrands: this.shopParams.brands,
+                selectedTypes: this.shopParams.types
         }
       });
 
       dialogRef.afterClosed().subscribe({
         next: result => {
         if (result) {
-          this.selectedBrands = result.selectedBrands;
-          this.selectedTypes = result.selectedTypes;
+          this.shopParams.brands = result.selectedBrands;
+          this.shopParams.types = result.selectedTypes;
           this.getProducts();
         }},
       });
@@ -71,7 +72,7 @@ protected readonly title = 'E-Commerce';
     onSortChange(event:MatSelectionListChange){
       const selectedOption = event.options[0];
       if(selectedOption){
-        this.selectedsort = selectedOption.value;
+        this.shopParams.sort = selectedOption.value;
       }
       this.getProducts();
     }

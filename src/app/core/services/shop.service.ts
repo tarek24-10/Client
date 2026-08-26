@@ -2,6 +2,7 @@ import { inject, Injectable, signal } from '@angular/core';
 import { Product } from '../../shared/models/product';
 import { Pagination } from '../../shared/models/pagination';
 import { HttpClient, HttpParams } from '@angular/common/http';
+import { ShopParams } from '../../shared/models/shopParams';
 
 @Injectable({
   providedIn: 'root',
@@ -13,25 +14,25 @@ export class ShopService {
   brands:string[] = [];
   types:string[] = [];
 
-  getProducts(brands?:string[], types?:string[], sort?:string) {
+  getProducts(shopParams:ShopParams) {
 
       let params = new HttpParams();
 
-      if(brands && brands.length > 0)
+      if(shopParams.brands.length > 0)
       {
-        params = params.append("brands", brands.join(","));
+        params = params.append("brands", shopParams.brands.join(","));
       }
 
-      if(types && types.length > 0)
+      if(shopParams.types.length > 0)
       {
-        params = params.append("types", types.join(","));
+        params = params.append("types", shopParams.types.join(","));
       }
 
-      if(sort){
-        params = params.append("sort", sort);
+      if(shopParams.sort){
+        params = params.append("sort", shopParams.sort);
       }
 
-      params = params.append("pagesize",20);
+      params = params.append("pagesize", shopParams.pageSize);
 
       return this.http.get<Pagination<Product>>(this.baseUrl + "products", {params});
     };
