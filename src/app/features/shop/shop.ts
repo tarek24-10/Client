@@ -3,7 +3,7 @@ import { Product } from '../../shared/models/product';
 import { ShopService } from '../../core/services/shop.service';
 import { MatCardModule } from '@angular/material/card';
 import { ProductItem } from "./product-item/product-item";
-import { MatAnchor } from "@angular/material/button";
+import { MatAnchor, MatIconButton } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
 import { MatDialog } from '@angular/material/dialog';
 import { FilterDialog } from './filter-dialog/filter-dialog';
@@ -12,10 +12,12 @@ import { MatListOption, MatSelectionList, MatSelectionListChange } from '@angula
 import { ShopParams } from '../../shared/models/shopParams';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { Pagination } from '../../shared/models/pagination';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-shop',
-  imports: [MatCardModule, ProductItem, MatAnchor, MatIconModule, MatMenu, MatSelectionList, MatListOption, MatMenuTrigger, MatPaginatorModule],
+  imports: [MatCardModule, ProductItem, MatAnchor, MatIconModule, MatMenu, MatSelectionList, MatListOption, MatMenuTrigger,
+    MatPaginatorModule, FormsModule, MatIconButton],
   templateUrl: './shop.html',
   styleUrl: './shop.css',
 })
@@ -88,6 +90,11 @@ protected readonly title = 'E-Commerce';
       this.shopParams.pageSize = event.pageSize;
       console.log(this.shopParams.pageNumber);
       console.log(this.shopParams.pageSize);
+      this.getProducts();
+    }
+
+    onSearchChange(){
+      this.shopParams.pageNumber = 1;
       this.getProducts();
     }
 }

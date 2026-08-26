@@ -5,3 +5,8 @@
 .container{
     @apply mx-auto;
 }
+
+
+.text-primary{
+    @apply text-blue-900;
+}

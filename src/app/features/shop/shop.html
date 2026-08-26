@@ -12,8 +12,30 @@
 
     </mat-paginator>
 
+    <form #serachFrom="ngForm"
+    (ngSubmit)="onSearchChange()"
+    class="w-full max-w-md flex items-center"
+    >
+
+    <div class="border border-gray-300 w-full rounded-lg flex justify-between mr-4">
+    <input type="search"
+    class="outline-0 rounded-lg p-4 text-gray-900 block w-full"
+    placeholder="Search"
+    name="search"
+    [(ngModel)]="shopParams.search"
+    />
+
+    <button mat-icon-button type="submit"
+    class="flex items-center top-2 right-2"
+    >
+    <mat-icon>search</mat-icon>
+    </button>
+    </div>
+
+    </form>
+
     <div class="flex gap-3">
-    <button mat-stroked-button (click)="openFilterDialog()">
+    <button class="match-input-height" mat-stroked-button (click)="openFilterDialog()">
         <mat-icon>filter_list</mat-icon>
         Filters
     </button>
