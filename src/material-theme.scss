@@ -38,7 +38,8 @@ body {
 
 :root {
   @include mat.button-overrides((
-    outlined-container-shape: 6px
+    outlined-container-shape: 6px,
+    filled-container-shape: 6px
   ));
 }
 

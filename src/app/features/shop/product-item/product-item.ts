@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, inject, Inject, Input } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { Product } from '../../../shared/models/product';
 import { CurrencyPipe } from '@angular/common';
@@ -13,4 +13,5 @@ import { MatIconModule } from "@angular/material/icon";
 })
 export class ProductItem {
   @Input() product?:Product;
+
 }
