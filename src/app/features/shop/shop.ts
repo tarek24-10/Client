@@ -7,10 +7,12 @@ import { MatAnchor } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
 import { MatDialog } from '@angular/material/dialog';
 import { FilterDialog } from './filter-dialog/filter-dialog';
+import { MatMenu, MatMenuTrigger } from '@angular/material/menu';
+import { MatListOption, MatSelectionList, MatSelectionListChange } from '@angular/material/list';
 
 @Component({
   selector: 'app-shop',
-  imports: [MatCardModule, ProductItem, MatAnchor, MatIconModule],
+  imports: [MatCardModule, ProductItem, MatAnchor, MatIconModule, MatMenu, MatSelectionList, MatListOption, MatMenuTrigger],
   templateUrl: './shop.html',
   styleUrl: './shop.css',
 })
@@ -20,6 +22,12 @@ protected readonly title = 'E-Commerce';
   private dialogService = inject(MatDialog);
   selectedBrands:string[] = [];
   selectedTypes:string[] = [];
+  selectedsort:string = "name";
+  sortOptions = [
+    {name:"Alphabetical", value:"name"},
+    {name:"Price: Low-High", value:"priceAsc"},
+    {name:"price: High-Low", value:"priceDesc"}
+  ];
 
   products = signal<Product[]>([]);
 
@@ -31,10 +39,15 @@ protected readonly title = 'E-Commerce';
       this.shopService.getBrands();
       this.shopService.getTypes();
 
-      this.shopService.getProducts().subscribe({
+      this.getProducts();
+      };
+
+    getProducts(){
+      this.shopService.getProducts(this.selectedBrands, this.selectedTypes, this.selectedsort).subscribe({
       next: (response) => this.products.set(response.data),
       error: (error) => console.log(error)
-    });};
+    });
+    };
 
     openFilterDialog(){
       const dialogRef = this.dialogService.open(FilterDialog, {
@@ -44,15 +57,22 @@ protected readonly title = 'E-Commerce';
                 selectedTypes: this.selectedTypes
         }
       });
+
       dialogRef.afterClosed().subscribe({
         next: result => {
         if (result) {
           this.selectedBrands = result.selectedBrands;
           this.selectedTypes = result.selectedTypes;
-          this.shopService.getProducts(this.selectedBrands,this.selectedTypes).subscribe({
-            next : responce => this.products.set(responce.data),
-          })
+          this.getProducts();
         }},
-      })
+      });
+    }
+
+    onSortChange(event:MatSelectionListChange){
+      const selectedOption = event.options[0];
+      if(selectedOption){
+        this.selectedsort = selectedOption.value;
+      }
+      this.getProducts();
     }
 }

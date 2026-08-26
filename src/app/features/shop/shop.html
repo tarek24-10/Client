@@ -1,11 +1,13 @@
 <div class="flex flex-column gap-3 justify-end mb-3">
 
-<div>
     <button mat-stroked-button (click)="openFilterDialog()">
         <mat-icon>filter_list</mat-icon>
         Filters
     </button>
-</div>
+    <button mat-stroked-button [matMenuTriggerFor]="sortMenu">
+        <mat-icon>swap_vert</mat-icon>
+        sort
+    </button>
 
 </div>
 
@@ -15,6 +17,14 @@
         <app-product-item [product]="product"></app-product-item>
     }
 </div>
+
+<mat-menu #sortMenu="matMenu">
+    <mat-selection-list [multiple]="false" (selectionChange)="onSortChange($event)">
+        @for (option of sortOptions; track $index) {
+        <mat-list-option [value]="option.value" [selected]="selectedsort === option.value">{{option.name}}</mat-list-option>
+        }
+    </mat-selection-list>
+</mat-menu>
 
 
 
