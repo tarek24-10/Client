@@ -5,6 +5,7 @@ import { CurrencyPipe } from '@angular/common';
 import { MatAnchor } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
 import { RouterLink } from "@angular/router";
+import { CartService } from '../../../core/services/cart.service';
 
 @Component({
   selector: 'app-product-item',
@@ -15,4 +16,5 @@ import { RouterLink } from "@angular/router";
 export class ProductItem {
   @Input() product?:Product;
 
+  cartService = inject(CartService);
 }
