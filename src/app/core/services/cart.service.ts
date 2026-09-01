@@ -1,10 +1,10 @@
-import { inject, Injectable, signal } from '@angular/core';
+import { computed, inject, Injectable, signal } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Product } from '../../shared/models/product';
 import { CartItem } from '../../shared/models/cartItem';
 import { ShoppingCart } from '../../shared/models/shoppingCart';
-import { map } from 'rxjs';
+import { count, map } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -13,6 +13,8 @@ export class CartService {
   baseUrl = environment.apiUrl;
   private http = inject(HttpClient);
   cart = signal<ShoppingCart | null>(null);
+
+  itemCount = computed(() => this.cart()?.items.reduce((sum, item) => sum + item.quantity, 0));
 
   getCart(id:string){
     return this.http.get<ShoppingCart>(this.baseUrl  + 'cart?id=' + id).pipe(
