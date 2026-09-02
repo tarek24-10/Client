@@ -30,11 +30,15 @@ export class Register {
     password: ['']
   });
 
+  validationErrors?: string[];
+
   onSubmit(){
     this.accountService.register(this.registerForm.value).subscribe({
       next: () => { this.snack.success("Registeration successful - now you can login");
         this.router.navigateByUrl("/account/login");
-      }
+      },
+
+      error: errors => this.validationErrors = errors
 
     })
   }
