@@ -7,6 +7,7 @@ import { errorInterceptor } from './core/interceptors/error-interceptor';
 import { loadingInterceptor } from './core/interceptors/loading-interceptor';
 import { InitService } from './core/services/init.service';
 import { lastValueFrom } from 'rxjs';
+import { AccountService } from './core/services/account.service';
 
 
 export const appConfig: ApplicationConfig = {
@@ -17,6 +18,8 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(withInterceptors([errorInterceptor, loadingInterceptor])),
     provideAppInitializer(async () => {
       const initService = inject(InitService);
+
+      const accountService = inject(AccountService);
 
       return lastValueFrom(initService.init()).finally(() =>
       {
