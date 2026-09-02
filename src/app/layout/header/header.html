@@ -11,8 +11,13 @@
             <a routerLink="/cart" routerLinkActive="active" matBadge="{{cartService.itemCount()}}" matBadgeSize="large" class="mt-2 mr-2">
                 <mat-icon class="custom-badge">shopping_cart</mat-icon>
             </a>
+            @if (accountSevice.currentUser()) {
+                <button mat-stroked-button (click)="logout()">Logout</button>
+            }
+            @else {
             <button mat-stroked-button routerLink="/account/login">Login</button>
             <button mat-stroked-button routerLink="/account/register">Register</button>
+            }
         </div>
     </div>
     @if (loadService.loading) {
