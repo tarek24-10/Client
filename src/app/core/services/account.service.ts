@@ -19,7 +19,7 @@ export class AccountService {
   }
 
   register(values:any){
-    return this.http.post(this.baseUrl + 'account/login', values);
+    return this.http.post(this.baseUrl + 'account/register', values);
   }
 
   getUserInfo(){
