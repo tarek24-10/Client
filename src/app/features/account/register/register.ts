@@ -8,10 +8,11 @@ import { AccountService } from '../../../core/services/account.service';
 import { Router } from '@angular/router';
 import { SnackbarService } from '../../../core/services/snackbar.service';
 import { JsonPipe } from '@angular/common';
+import { TextInput } from "../../../shared/components/text-input/text-input";
 
 @Component({
   selector: 'app-register',
-  imports: [ReactiveFormsModule, MatCard, MatFormField, MatLabel, MatInput, MatButton, JsonPipe, MatError],
+  imports: [ReactiveFormsModule, MatCard, MatFormField, MatLabel, MatInput, MatButton, JsonPipe, MatError, TextInput],
   templateUrl: './register.html',
   styleUrl: './register.css',
 })
