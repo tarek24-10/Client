@@ -85,7 +85,7 @@ export class StripeService {
     }
 
     return this.http.post<ShoppingCart>(this.baseUrl + 'payment/' + cart.id, {}).pipe(
-      map(cart => {this.cartSerive.cart.set(cart);
+      map(cart => {this.cartSerive.setCart(cart);
           return cart;})
     )
   }
