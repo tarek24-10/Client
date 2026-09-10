@@ -6,10 +6,15 @@ import { MatAnchor, MatButton } from "@angular/material/button";
 import { StripeService } from '../../core/services/stripe.service';
 import { StripeAddressElement } from '@stripe/stripe-js';
 import { SnackbarService } from '../../core/services/snackbar.service';
+import {MatCheckboxChange, MatCheckboxModule} from '@angular/material/checkbox';
+import { StepperSelectionEvent } from '@angular/cdk/stepper';
+import { Address } from '../../shared/models/user';
+import { firstValueFrom } from 'rxjs';
+import { AccountService } from '../../core/services/account.service';
 
 @Component({
   selector: 'app-checkout',
-  imports: [OrderSummary, MatStepperModule, RouterLink, MatAnchor, MatButton],
+  imports: [OrderSummary, MatStepperModule, RouterLink, MatAnchor, MatButton, MatCheckboxModule],
   templateUrl: './checkout.html',
   styleUrl: './checkout.css',
 })
@@ -18,6 +23,9 @@ export class Checkout implements OnInit, OnDestroy {
   private addressElement?: StripeAddressElement;
 
   private snackbar = inject(SnackbarService);
+  saveAddress = false;
+
+  private accountService = inject(AccountService);
 
   async ngOnInit(){
     try{
@@ -26,6 +34,38 @@ export class Checkout implements OnInit, OnDestroy {
     }
     catch(error : any){
       this.snackbar.error(error.message)
+    }
+  }
+
+  onSaveAddressCheckboxChange(event:MatCheckboxChange){
+    this.saveAddress = event.checked;
+  }
+
+  async onStepChange(event:StepperSelectionEvent){
+    if(event.selectedIndex === 1){
+      if(this.saveAddress){
+        const address = await this.getAddressFromStripeAddress();
+        console.log(address);
+        if(address) await firstValueFrom(this.accountService.updateAddress(address));
+      }
+    }
+  }
+
+  private async getAddressFromStripeAddress() : Promise<Address | null> {
+    const result = await this.addressElement?.getValue();
+    const address = result?.value.address;
+
+    if(address){
+      return {
+            line1: address.line1,
+            line2: address.line2 || undefined,
+            country: address.country,
+            state: address.state,
+            city: address.city,
+            postalCode: address.postal_code
+      }
+    }else{
+      return null;
     }
   }
 

@@ -80,7 +80,6 @@ export class StripeService {
 
   createOrUpdatePaymentIntenet(){
     const cart = this.cartSerive.cart();
-    console.log(cart);
     if(!cart){
       throw new Error("Problem with cart");
     }
