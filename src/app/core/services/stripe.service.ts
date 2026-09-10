@@ -46,8 +46,29 @@ export class StripeService {
     if(!this.addressElement){
       const elements = await this.initializeElements();
       if(elements){
+
+        const user = this.accountService.currentUser();
+
+        let defaultValues:StripeAddressElementOptions['defaultValues'] = {};
+
+        if(user){
+          defaultValues.name = user.firstName + ' ' + user.lastName;
+        }
+
+        if(user?.address){
+          defaultValues.address = {
+            line1: user.address.line1,
+            line2: user.address.line2,
+            country: user.address.country,
+            state: user.address.state,
+            city: user.address.city,
+            postal_code: user.address.postalCode
+          }
+        }
+
         const options: StripeAddressElementOptions = {
-          mode:'shipping'
+          mode:'shipping',
+          defaultValues
         };
         this.addressElement = elements.create('address', options);
       } else{
@@ -68,5 +89,10 @@ export class StripeService {
       map(cart => {this.cartSerive.cart.set(cart);
           return cart;})
     )
+  }
+
+  disposeElements(){
+    this.elements = undefined;
+    this.addressElement = undefined;
   }
 }
