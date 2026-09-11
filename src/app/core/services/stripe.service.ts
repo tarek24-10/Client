@@ -98,7 +98,7 @@ export class StripeService {
       throw new Error("Problem with cart");
     }
 
-    return this.http.post<ShoppingCart>(this.baseUrl + 'payment/' + cart.id, {}).pipe(
+    return this.http.post<ShoppingCart>(this.baseUrl + 'payments/' + cart.id, {}).pipe(
       map(cart => {this.cartSerive.setCart(cart);
           return cart;})
     )
