@@ -19,7 +19,7 @@ export class CartService {
 
   selectedDelivery = signal<DeliveryMethod | null>(null);
 
-  total = computed(() => {
+  totals = computed(() => {
     const cart = this.cart();
     if(!cart) return null;
 

@@ -12,10 +12,13 @@ import { Address } from '../../shared/models/user';
 import { firstValueFrom } from 'rxjs';
 import { AccountService } from '../../core/services/account.service';
 import { Delivery } from "./delivery/delivery";
+import { Review } from './review/review';
+import { CartService } from '../../core/services/cart.service';
+import { CurrencyPipe } from '@angular/common';
 
 @Component({
   selector: 'app-checkout',
-  imports: [OrderSummary, MatStepperModule, RouterLink, MatAnchor, MatButton, MatCheckboxModule, Delivery],
+  imports: [OrderSummary, MatStepperModule, RouterLink, MatAnchor, MatButton, MatCheckboxModule, Delivery, Review, CurrencyPipe],
   templateUrl: './checkout.html',
   styleUrl: './checkout.css',
 })
@@ -27,6 +30,7 @@ export class Checkout implements OnInit, OnDestroy {
   saveAddress = false;
 
   private accountService = inject(AccountService);
+  cartService = inject(CartService);
 
   private paymentElement?: StripePaymentElement;
 
