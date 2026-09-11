@@ -15,11 +15,12 @@ import { Delivery } from "./delivery/delivery";
 import { Review } from './review/review';
 import { CartService } from '../../core/services/cart.service';
 import { CurrencyPipe, JsonPipe } from '@angular/common';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-checkout',
   imports: [OrderSummary, MatStepperModule, RouterLink, MatAnchor, MatButton, MatCheckboxModule, Delivery, Review, CurrencyPipe
-    , JsonPipe
+    , JsonPipe, MatProgressSpinnerModule
   ],
   templateUrl: './checkout.html',
   styleUrl: './checkout.css',
@@ -41,6 +42,8 @@ export class Checkout implements OnInit, OnDestroy {
   confirmationToken?:ConfirmationToken;
 
   private router = inject(Router);
+
+  loading = false;
 
   async ngOnInit(){
     try{
@@ -117,6 +120,7 @@ export class Checkout implements OnInit, OnDestroy {
 
   
     async confirmPayment(stepper:MatStepper){
+      this.loading = true;
       try {
         if(this.confirmationToken){
           const result = await this.stripeSevice.confirmPayment(this.confirmationToken);
@@ -132,6 +136,8 @@ export class Checkout implements OnInit, OnDestroy {
       } catch (error:any) {
         this.snackbar.error(error.message || 'Something went wrong');
         stepper.previous(); 
+      }finally{
+        this.loading = false;
       }
     }
 
