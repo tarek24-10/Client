@@ -10,6 +10,7 @@ export interface Order {
   total: number
   status: string
   paymentIntentId: string
+  shippingPrice: number
 }
 
 export interface ShippingAddress {
