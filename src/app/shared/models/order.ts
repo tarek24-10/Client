@@ -38,7 +38,7 @@ export interface OrderItem {
 }
 
 export interface OrderToCreate{
-    cartId: number
+    cartId: string
     deliveryMethodId: number
     shippingAddress: ShippingAddress
     paymentSummary: PaymentSummary
