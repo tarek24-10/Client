@@ -14,6 +14,7 @@ import { emptyCartGuard } from './core/guards/empty-cart-guard';
 import { Success } from './features/checkout/success/success';
 import { OrderDetailed } from './features/orders/order-detailed/order-detailed';
 import { Orders } from './features/orders/orders';
+import { orderCompleteGuard } from './core/guards/order-complete-guard';
 
 export const routes: Routes = [
     {path:'', component:Home},
@@ -21,7 +22,7 @@ export const routes: Routes = [
     {path:'shop/:id', component:ProductDetails},
     {path:'cart', component:Cart},
     {path:'checkout', component:Checkout, canActivate: [authGuard, emptyCartGuard]},
-    {path:'checkout/success', component:Success, canActivate: [authGuard]},
+    {path:'checkout/success', component:Success, canActivate: [authGuard, orderCompleteGuard]},
     {path:'orders', component:Orders, canActivate: [authGuard]},
     {path:'orders/:id', component:OrderDetailed, canActivate: [authGuard]},
     {path:'account/login', component:Login},
