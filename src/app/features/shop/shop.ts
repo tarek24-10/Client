@@ -13,11 +13,12 @@ import { ShopParams } from '../../shared/models/shopParams';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { Pagination } from '../../shared/models/pagination';
 import { FormsModule } from '@angular/forms';
+import { EmptyState } from '../../shared/components/empty-state/empty-state';
 
 @Component({
   selector: 'app-shop',
   imports: [MatCardModule, ProductItem, MatAnchor, MatIconModule, MatMenu, MatSelectionList, MatListOption, MatMenuTrigger,
-    MatPaginatorModule, FormsModule, MatIconButton],
+    MatPaginatorModule, FormsModule, MatIconButton, EmptyState],
   templateUrl: './shop.html',
   styleUrl: './shop.css',
 })
@@ -48,6 +49,11 @@ protected readonly title = 'E-Commerce';
 
       this.getProducts();
       };
+
+    resetFilters(){
+      this.shopParams =  new ShopParams();
+      this.getProducts();
+    }
 
     getProducts(){
       this.shopService.getProducts(this.shopParams).subscribe({
