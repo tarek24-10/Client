@@ -9,7 +9,7 @@ export const authGuard: CanActivateFn = (route, state) => {
   const router = inject(Router);
 
   if(accountService.currentUser()){
-    return of(true); //true;
+    return of(true); //to avoid redirect delay;
   } else{
     return accountService.getAuthState().pipe(
       map(auth => {
