@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { Product } from '../../shared/models/product';
 import { CartItem } from '../../shared/models/cartItem';
 import { ShoppingCart } from '../../shared/models/shoppingCart';
-import { count, map } from 'rxjs';
+import { count, firstValueFrom, map, tap } from 'rxjs';
 import { DeliveryMethod } from '../../shared/models/deliveryMethod';
 
 @Injectable({
@@ -47,12 +47,12 @@ export class CartService {
   }
 
   setCart(cart:ShoppingCart){
-    return this.http.post<ShoppingCart>(this.baseUrl  + 'cart', cart).subscribe({
-      next: cart => this.cart.set(cart)
-    })
+    return this.http.post<ShoppingCart>(this.baseUrl  + 'cart', cart).pipe(
+      tap(cart => this.cart.set(cart))
+    )
   }
 
-  addItemToCart(item:Product | CartItem, quantity = 1){
+  async addItemToCart(item:Product | CartItem, quantity = 1){
     const cart = this.cart() ?? this.createCart();
 
     if(this.isProduct(item)){
@@ -61,10 +61,10 @@ export class CartService {
 
     cart.items = this.addOrUpdateItem(cart.items, item, quantity);
 
-    this.setCart(cart);
+    await firstValueFrom(this.setCart(cart));
   }
 
-  removeItemfromCart(productId:number | CartItem, quantity = 1){
+  async removeItemfromCart(productId:number | CartItem, quantity = 1){
     const cart = this.cart();
 
     if(!cart) return;
@@ -84,7 +84,7 @@ export class CartService {
         this.deleteCart()
       }
       else{
-        this.setCart(cart);
+        await firstValueFrom(this.setCart(cart));
       }
     }
   }

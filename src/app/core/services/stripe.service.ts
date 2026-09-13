@@ -99,7 +99,7 @@ export class StripeService {
     }
 
     return this.http.post<ShoppingCart>(this.baseUrl + 'payments/' + cart.id, {}).pipe(
-      map(cart => {this.cartSerive.setCart(cart);
+      map(async cart => {await firstValueFrom(this.cartSerive.setCart(cart));
           return cart;})
     )
   }
