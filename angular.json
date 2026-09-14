@@ -30,6 +30,7 @@
             ],
             "styles": [
               "src/material-theme.scss",
+              "tailwind.css",
               "src/styles.css"
             ]
           },

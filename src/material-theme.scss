@@ -59,6 +59,13 @@ a{
   }
 }
 
+@layer base {
+  button:not(:disabled),
+  [role="button"]:not(:disabled){
+    cursor: pointer;
+  }
+}
+
 .snack-error {
   @include mat.snack-bar-overrides((
     button-color: white,
