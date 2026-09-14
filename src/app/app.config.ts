@@ -10,6 +10,17 @@ import { lastValueFrom } from 'rxjs';
 import { AccountService } from './core/services/account.service';
 import { authInterceptor } from './core/interceptors/auth-interceptor';
 
+function initializeApp(initService:InitService){
+  return () => {lastValueFrom(initService.init()).finally(() =>
+      {
+        const splash = document.getElementById('initial-splash');
+        if(splash){
+          splash.remove();
+        }
+      });
+    }
+}
+
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -17,18 +28,11 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideZoneChangeDetection(),
     provideHttpClient(withInterceptors([errorInterceptor, loadingInterceptor, authInterceptor])),
-    provideAppInitializer(async () => {
-      const initService = inject(InitService);
-
-      const accountService = inject(AccountService);
-
-      return lastValueFrom(initService.init()).finally(() =>
-      {
-        const splash = document.getElementById('initial-splash');
-        if(splash){
-          splash.remove();
-        }
-      });
-    })
+    provideAppInitializer( 
+      () =>{
+      const initializeFn = initializeApp(inject(InitService));
+      return initializeFn();
+    }
+    )
   ]
 };
