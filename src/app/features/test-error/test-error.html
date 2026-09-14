@@ -6,10 +6,10 @@
     <button mat-stroked-button (click)="get400ValidationError()">TestValidation Error</button>
 </div>
 
-@if (validationErrors) {
+@if (validationErrors()) {
     <div class="mx-auto mt-5 max-w-lg bg-red-100">
         <ul class="space-y-2 p-2">
-            @for (error of validationErrors; track $index) {
+            @for (error of validationErrors(); track $index) {
                 <li class="text-red-800">{{error}}</li>
             }
         </ul>

@@ -37,7 +37,7 @@ protected readonly title = 'E-Commerce';
 
   pageSizeOptions = [5,10,15,20];
 
-  products = signal<Pagination<Product> | null>(null);
+  products = signal<Pagination<Product> | undefined>(undefined);
 
   ngOnInit(): void {
     this.initializeShop();

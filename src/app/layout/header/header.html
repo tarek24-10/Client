@@ -24,7 +24,7 @@
             }
         </div>
     </div>
-    @if (loadService.loading) {
+    @if (loadService.loading()) {
     <mat-progress-bar mode="indeterminate" class="mt-1"></mat-progress-bar>
 }
 </header>

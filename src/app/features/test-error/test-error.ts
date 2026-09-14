@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal} from '@angular/core';
 import { MatButton } from '@angular/material/button';
 
 @Component({
@@ -12,7 +12,7 @@ export class TestError {
 
   private http = inject(HttpClient);
 
-  validationErrors?:string[];
+  validationErrors = signal<string[] | undefined>(undefined);
 
   get404Error() {
     this.http.get('https://localhost:5001/api/error/notfound').subscribe({
@@ -45,7 +45,7 @@ export class TestError {
   get400ValidationError() {
     this.http.post('https://localhost:5001/api/error/validationerror', {}).subscribe({
       next: response => console.log(response),
-      error: error => this.validationErrors = error
+      error: error => this.validationErrors.set(error)
     });
   }
 }

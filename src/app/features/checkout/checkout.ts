@@ -41,11 +41,11 @@ export class Checkout implements OnInit, OnDestroy {
 
   completionStatus = signal<{address:boolean, card:boolean, delivery:boolean}>({address:false, card:false, delivery:false})
 
-  confirmationToken?:ConfirmationToken;
+  confirmationToken = signal<ConfirmationToken | undefined>(undefined);
 
   private router = inject(Router);
 
-  loading = false;
+  loading = signal(false);
 
   private orderService = inject(OrderService);
 
@@ -68,15 +68,19 @@ export class Checkout implements OnInit, OnDestroy {
   }
 
   handleAddressChange = (event:StripeAddressElementChangeEvent) => {
-    this.completionStatus.update(state =>{ state.address = event.complete;
-      return state
+    this.completionStatus.update(state =>({ 
+      ...state,
+      address : event.complete
     })
+  )
   }
 
   handlePaymentChange = (event:StripePaymentElementChangeEvent) => {
-    this.completionStatus.update(state =>{ state.card = event.complete;
-      return state
+    this.completionStatus.update(state =>({ 
+      ...state,
+      card : event.complete
     })
+  )
   }
 
   handleDeliveryChange = (event:boolean) => {
@@ -95,7 +99,7 @@ export class Checkout implements OnInit, OnDestroy {
         const result = await this.stripeSevice.createConfirmationToken();
         if(result.error) throw new Error(result.error.message);
 
-        this.confirmationToken = result.confirmationToken;
+        this.confirmationToken.set(result.confirmationToken);
       }
     }
     catch(error:any){
@@ -123,10 +127,11 @@ export class Checkout implements OnInit, OnDestroy {
 
   
     async confirmPayment(stepper:MatStepper){
-      this.loading = true;
+      this.loading.set(true);
       try {
-        if(this.confirmationToken){
-          const result = await this.stripeSevice.confirmPayment(this.confirmationToken);
+        const confirmationToken = this.confirmationToken();
+        if(confirmationToken){
+          const result = await this.stripeSevice.confirmPayment(confirmationToken);
 
           if(result.paymentIntent?.status == 'succeeded'){
             const order = await this.createOrderModel();
@@ -152,14 +157,14 @@ export class Checkout implements OnInit, OnDestroy {
         this.snackbar.error(error.message || 'Something went wrong');
         stepper.previous(); 
       }finally{
-        this.loading = false;
+        this.loading.set(false);
       }
     }
 
   private async createOrderModel():Promise<OrderToCreate>{
     const cart = this.cartService.cart();
     const shippingAddress = await this.getAddressFromStripeAddress() as ShippingAddress;
-    const card = this.confirmationToken?.payment_method_preview.card;
+    const card = this.confirmationToken()?.payment_method_preview.card;
     if(!cart?.id || !cart.deliveryMethodId || !card || !shippingAddress){
       throw new Error('Problem creating order')
     }

@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { ShopService } from '../../../core/services/shop.service';
 import { ActivatedRoute } from '@angular/router';
 import { Product } from '../../../shared/models/product';
@@ -20,7 +20,7 @@ import { FormsModule } from '@angular/forms';
 export class ProductDetails implements OnInit {
   private shopService = inject(ShopService);
   private activatedRoute = inject(ActivatedRoute);
-  product?:Product;
+  product = signal<Product | undefined>(undefined)
 
   private cartService = inject(CartService);
   quantityInCart = 0;
@@ -34,7 +34,7 @@ export class ProductDetails implements OnInit {
     const id = this.activatedRoute.snapshot.paramMap.get('id');
     if(!id) return;
     this.shopService.getProduct(+id).subscribe({
-      next: product => {this.product = product;
+      next: product => {this.product.set(product);
         this.updateQuantityInCart();
       },
       error: error => console.log(error)
@@ -42,7 +42,7 @@ export class ProductDetails implements OnInit {
   }
 
   updateQuantityInCart(){
-    this.quantityInCart = this.cartService.cart()?.items.find(i => i.productId == this.product?.id)?.quantity ?? 0;
+    this.quantityInCart = this.cartService.cart()?.items.find(i => i.productId == this.product()?.id)?.quantity ?? 0;
 
     this.quantity = this.quantityInCart || 1;
   }
@@ -52,18 +52,19 @@ export class ProductDetails implements OnInit {
   }
 
   updateCart(){
-    if(!this.product) return;
+    const product = this.product();
+    if(!product) return;
 
     if(this.quantity > this.quantityInCart) {
       const itemsToAdd = this.quantity - this.quantityInCart;
       this.quantityInCart += itemsToAdd;
-      this.cartService.addItemToCart(this.product, itemsToAdd);
+      this.cartService.addItemToCart(product, itemsToAdd);
     }
     else
     {
       const itemsToremove = this.quantityInCart - this.quantity;
       this.quantityInCart -= itemsToremove;
-      this.cartService.removeItemfromCart(this.product.id, itemsToremove);
+      this.cartService.removeItemfromCart(product.id, itemsToremove);
     }
   }
 }
