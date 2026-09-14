@@ -6,15 +6,7 @@ import { TestError } from './features/test-error/test-error';
 import { ServerError } from './shared/components/server-error/server-error';
 import { NotFound } from './shared/components/not-found/not-found';
 import { Cart } from './features/cart/cart';
-import { Checkout } from './features/checkout/checkout';
-import { Login } from './features/account/login/login';
-import { Register } from './features/account/register/register';
 import { authGuard } from './core/guards/auth-guard';
-import { emptyCartGuard } from './core/guards/empty-cart-guard';
-import { Success } from './features/checkout/success/success';
-import { OrderDetailed } from './features/orders/order-detailed/order-detailed';
-import { Orders } from './features/orders/orders';
-import { orderCompleteGuard } from './core/guards/order-complete-guard';
 import { Admin } from './features/admin/admin';
 import { adminGuard } from './core/guards/admin-guard';
 
@@ -23,15 +15,13 @@ export const routes: Routes = [
     {path:'shop', component:Shop},
     {path:'shop/:id', component:ProductDetails},
     {path:'cart', component:Cart},
-    {path:'checkout', component:Checkout, canActivate: [authGuard, emptyCartGuard]},
-    {path:'checkout/success', component:Success, canActivate: [authGuard, orderCompleteGuard]},
-    {path:'orders', component:Orders, canActivate: [authGuard]},
-    {path:'orders/:id', component:OrderDetailed, canActivate: [authGuard]},
-    {path:'account/login', component:Login},
-    {path:'account/register', component:Register},
+    {path:'checkout', loadChildren: () => import('./features/checkout/routes').then(r => r.checkoutRoutes)},
+    {path:'orders', loadChildren: () => import('./features/orders/routes').then(r => r.orderRoutes)},
+    {path:'account', loadChildren: () => import('./features/account/routes').then(r => r.accountRoutes)},
     {path:'test-error', component:TestError},
     {path:'not-found', component:NotFound},
     {path:'server-error', component:ServerError},
-    {path:'admin', component:Admin, canActivate: [authGuard, adminGuard]},
+    {path:'admin', loadComponent:() => import('./features/admin/admin').then(c => c.Admin),
+        canActivate: [authGuard, adminGuard]},
     {path:'**', redirectTo:'not-found', pathMatch:'full'}
 ];
