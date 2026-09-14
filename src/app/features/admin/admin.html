@@ -49,10 +49,10 @@
       <th mat-header-cell *matHeaderCellDef> Actions </th>
       <td mat-cell *matCellDef="let order">
         <div class="flex gap-2">
-            <button mat-icon-button routerLink="admin/orders/{{order.id}}" matTooltip="View">
+            <button mat-icon-button routerLink="/orders/{{order.id}}" matTooltip="View">
             <mat-icon class="text-blue-500!">visibility</mat-icon>
         </button>
-        <button mat-icon-button matTooltip="Refund">
+        <button mat-icon-button matTooltip="Refund" (click)="refundOrder(order.id)" [disabled]="order.status === 'Refunded'">
             <mat-icon class="text-yellow-500!">undo</mat-icon>
         </button>
         </div>

@@ -23,7 +23,7 @@ export class AdminService {
   }
 
   getOrder(id:number){
-      return this.http.get<Order>(this.baseUrl + 'admin/orders/' + 'id');
+      return this.http.get<Order>(this.baseUrl + 'admin/orders/' + id);
   }
 
   refundOrder(id:number){

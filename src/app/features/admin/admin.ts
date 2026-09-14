@@ -60,4 +60,12 @@ export class Admin implements OnInit {
     this.orderParams.pageNumber = 1;
     this.loadOrders();
   }
+
+  refundOrder(id:number){
+    this.adminService.refundOrder(id).subscribe({
+      next: order => {
+        this.dataSource.data = this.dataSource.data.map(o => o.id === id ? order : o);
+      }
+    })
+  }
 }
