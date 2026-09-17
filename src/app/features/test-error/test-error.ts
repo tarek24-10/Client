@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, inject, signal} from '@angular/core';
 import { MatButton } from '@angular/material/button';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-test-error',
@@ -12,38 +13,40 @@ export class TestError {
 
   private http = inject(HttpClient);
 
+  baseurl = environment.apiUrl;
+
   validationErrors = signal<string[] | undefined>(undefined);
 
   get404Error() {
-    this.http.get('https://localhost:5001/api/error/notfound').subscribe({
+    this.http.get(this.baseurl + 'error/notfound').subscribe({
       next: response => console.log(response),
       error: error => console.log(error)
     });
   }
 
   get400Error() {
-    this.http.get('https://localhost:5001/api/error/badrequest').subscribe({
+    this.http.get(this.baseurl + 'error/badrequest').subscribe({
       next: response => console.log(response),
       error: error => console.log(error)
     });
   }
 
   get401Error() {
-    this.http.get('https://localhost:5001/api/error/unauthorized').subscribe({
+    this.http.get(this.baseurl + 'error/unauthorized').subscribe({
       next: response => console.log(response),
       error: error => console.log(error)
     });
   }
 
   get500Error() {
-    this.http.get('https://localhost:5001/api/error/internalerror').subscribe({
+    this.http.get(this.baseurl + 'error/internalerror').subscribe({
       next: response => console.log(response),
       error: error => console.log(error)
     });
   }
 
   get400ValidationError() {
-    this.http.post('https://localhost:5001/api/error/validationerror', {}).subscribe({
+    this.http.post(this.baseurl + 'error/validationerror', {}).subscribe({
       next: response => console.log(response),
       error: error => this.validationErrors.set(error)
     });
